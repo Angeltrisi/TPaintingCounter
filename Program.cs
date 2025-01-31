@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using TPaintingCounter.Core;
+﻿using TPaintingCounter.Core;
 
 static void Start()
 {
