@@ -49,16 +49,12 @@ namespace TPaintingCounter.Core
 
             // filetype
             FileType fileType = (FileType)reader.ReadByte();
-            Console.WriteLine($"File type is {fileType}.");
 
             // file revision
             uint fileRevision = reader.ReadUInt32();
-            Console.WriteLine($"File revision is {fileRevision}");
 
             // is this a favorite world?
             bool isFavorite = (reader.ReadUInt64() & 1) == 1;
-            string add = isFavorite ? string.Empty : "not ";
-            Console.WriteLine($"This world is {add}marked as favorite.");
 
             // stream positions of different things in the world file
             short posSize = reader.ReadInt16();
@@ -173,9 +169,12 @@ namespace TPaintingCounter.Core
 
             // a bunch of useless stuff (this will be tedious)
 
+            // 77 bytes. 76 from all the int reads, and one from the moon read.
+            reader.BaseStream.Position += 77;
+
+            /*
             // moon type
             byte moonType = reader.ReadByte();
-
             // idk what this is other than tree
             int treeX0 = reader.ReadInt32();
             int treeX1 = reader.ReadInt32();
@@ -206,6 +205,7 @@ namespace TPaintingCounter.Core
             // spawn tile position
             int spawnTileX = reader.ReadInt32();
             int spawnTileY = reader.ReadInt32();
+            */
 
             // world layers
             double worldSurface = reader.ReadDouble();
@@ -694,15 +694,17 @@ namespace TPaintingCounter.Core
             // load treetops? (wtf is this gameeee)
             // i'll leave this here for later. for now i'll just skip
         }
-        public IEnumerable<Tile> GetAllTiles()
+        public Tile[] GetAllTiles()
         {
+            Tile[] tiles = new Tile[maxTilesX * maxTilesY];
             for (int i = 0; i < maxTilesX; i++)
             {
                 for (int j = 0; j < maxTilesY; j++)
                 {
-                    yield return tileMap[i, j];
+                    tiles[j + i * maxTilesY] = tileMap[i, j];
                 }
             }
+            return tiles;
         }
     }
 }
